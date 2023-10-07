@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/static/css/main.592904e2.css",
-    "main.js": "/static/js/main.338ddd71.js",
-    "static/js/787.7f659876.chunk.js": "/static/js/787.7f659876.chunk.js",
-    "index.html": "/index.html",
-    "main.592904e2.css.map": "/static/css/main.592904e2.css.map",
-    "main.338ddd71.js.map": "/static/js/main.338ddd71.js.map",
-    "787.7f659876.chunk.js.map": "/static/js/787.7f659876.chunk.js.map"
+    "main.css": "/clone-trello/static/css/main.592904e2.css",
+    "main.js": "/clone-trello/static/js/main.170abed6.js",
+    "static/js/787.ce97404e.chunk.js": "/clone-trello/static/js/787.ce97404e.chunk.js",
+    "index.html": "/clone-trello/index.html",
+    "main.592904e2.css.map": "/clone-trello/static/css/main.592904e2.css.map",
+    "main.170abed6.js.map": "/clone-trello/static/js/main.170abed6.js.map",
+    "787.ce97404e.chunk.js.map": "/clone-trello/static/js/787.ce97404e.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.592904e2.css",
-    "static/js/main.338ddd71.js"
+    "static/js/main.170abed6.js"
   ]
 }
