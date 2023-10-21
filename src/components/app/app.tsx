@@ -1,36 +1,11 @@
 import React, { useState } from "react";
 import "./app.css";
 import Board from "../board";
-
- type Board={
-	id:number,
-	title:string,
-	fields:BoardField[]|[],
- }
-type BoardField={
-	id:number,
-	title:string,
-}
-
-type ActiveBoard={
-	move:{
-		board:Board|null,
-		field:BoardField|null,
-	},
-	receiving:{
-		board:Board|null,
-		field:BoardField|null,
-	}
-}
-
-type DragParams={
-	boardProps?:Board|null,
-	field?:BoardField|null,
-	e:React.DragEvent<HTMLDivElement>
-}
+import {BoardType,BoardField,ActiveBoard,DragParams}from '../type'
 
 
-const initialStateBoard:Board[]=[
+
+const initialStateBoard:BoardType[]=[
 	{
 		id: 3,
 		title: "Доска 3",
@@ -61,7 +36,7 @@ const initialStateBoard:Board[]=[
 ]
 
 const App = () => {
-	const [board, setBoard] = useState<Board[]>(initialStateBoard);
+	const [board, setBoard] = useState<BoardType[]>(initialStateBoard);
 	const [active, setActive] = useState<ActiveBoard>({
 		move: { board: null, field: null },
 		receiving: { board: null, field: null },
@@ -69,7 +44,7 @@ const App = () => {
 	const [inputValue, setInputValue] = useState<string>("");
 
 	const createBoard = () => {
-		const newBoard:Board = {
+		const newBoard:BoardType = {
 			id: board.length + 1,
 			title: inputValue.length > 0 ? inputValue : "Без названия",
 			fields: [],
@@ -78,23 +53,27 @@ const App = () => {
 		setBoard([newBoard, ...board]);
 		setInputValue("");
 	};
-	const sliceArray=({array,index,item=null})=>{
-		return item?[...array.slice(0, index), ...array.slice(index + 1)]:
-		[...array.slice(0, index), ...array.slice(index + 1)];
+	const sliceArray=<T,>(array:BoardType[]|BoardField[],index:number,item:T|null):T[]=>{
+		
+		const newArray=item?[...array.slice(0, index),item, ...array.slice(index + 1)]:[...array.slice(0, index), ...array.slice(index + 1)];
+		// @ts-ignore
+		return newArray;
+	
+		
 	}
 	const removeBoard = (boardId:number):void => {
 		const index = board.findIndex((el) => el.id === boardId);
-		setBoard([...board.slice(0, index), ...board.slice(index + 1)]);
+		setBoard(sliceArray<BoardType>(board,index,null));
 	};
 	////
 	const createField = (boardId:number, field:BoardField):void => {
 		const index = board.findIndex((el) => el.id === boardId);
-		const newItem:Board = {
+		const newItem:BoardType = {
 			...board[index],
 			fields: [field, ...board[index].fields],
 		};
 		setBoard((prev) => {
-			return [...prev.slice(0, index), newItem, ...prev.slice(index + 1)];
+			return sliceArray<BoardType>(prev,index,newItem);
 		});
 	};
 
@@ -103,18 +82,15 @@ const App = () => {
 		const indexField = board[indexBoard].fields.findIndex(
 			(el) => el.id === fieldId
 		);
-		const newItem:Board = {
+		const newItem:BoardType = {
 			...board[indexBoard],
-			fields: [
-				...board[indexBoard].fields.slice(0, indexField),
-				...board[indexBoard].fields.slice(indexField + 1),
-			],
+			fields:
+			sliceArray<BoardField>(board[indexBoard].fields,indexField,null)
+			,
 		};
-		setBoard([
-			...board.slice(0, indexBoard),
-			newItem,
-			...board.slice(indexBoard + 1),
-		]);
+		setBoard(
+			sliceArray<BoardType>(board,indexBoard,newItem)
+		);
 	};
 	/////
 	const onDragStart = ({boardProps=null, field=null, e}:DragParams) => {
@@ -150,7 +126,7 @@ const App = () => {
 			if (active.receiving.field === null) return 0;
 		});
 		
-		let newBoard:Board;
+		let newBoard:BoardType;
 		if (active.receiving.board?.id === active.move.board?.id) {
 			newBoard = {
 				...board[indexBoardAdd],
@@ -168,29 +144,24 @@ const App = () => {
 			if(active.move.field){
 				newBoard = {
 					...board[indexBoardAdd],
-					fields: [
-						...board[indexBoardAdd].fields.slice(0, indexFieldAdd + 1),
-						active.move.field,
-						...board[indexBoardAdd].fields.slice(indexFieldAdd + 1),
-					],
+					fields:[...board[indexBoardAdd].fields.slice(0, indexFieldAdd ),
+					active.move.field,
+					...board[indexBoardAdd].fields.slice(indexFieldAdd ),]
+					,
 				};
 			}else{
 				newBoard = {
 					...board[indexBoardAdd],
-					fields: [
-						...board[indexBoardAdd].fields.slice(0, indexFieldAdd + 1),
-						...board[indexBoardAdd].fields.slice(indexFieldAdd + 1),
-					],
+					fields:[...board[indexBoardAdd].fields.slice(0, indexFieldAdd),
+					
+					...board[indexBoardAdd].fields.slice(indexFieldAdd ),]
+					,
 				};
 			}
 			
 		}
 
-		setBoard([
-			...board.slice(0, indexBoardAdd),
-			newBoard,
-			...board.slice(indexBoardAdd + 1),
-		]);
+		setBoard(sliceArray<BoardType>(board,indexBoardAdd,newBoard));
 	};
 	const onDragEnd = ({e}:DragParams) => {
 		(e.target as HTMLDivElement).classList.remove("active");
@@ -210,16 +181,10 @@ const App = () => {
 				);
 				const newBoardFrom = {
 					...board[indexBoardFrom],
-					fields: [
-						...board[indexBoardFrom].fields.slice(0, indexFieldFrom),
-						...board[indexBoardFrom].fields.slice(indexFieldFrom + 1),
-					],
+					fields:sliceArray<BoardField>(board[indexBoardFrom].fields,indexFieldFrom,null)
+					,
 				};
-				setBoard([
-					...board.slice(0, indexBoardFrom),
-					newBoardFrom,
-					...board.slice(indexBoardFrom + 1),
-				]);
+				setBoard(sliceArray<BoardType>(board,indexBoardFrom,newBoardFrom));
 			
 		}
 		

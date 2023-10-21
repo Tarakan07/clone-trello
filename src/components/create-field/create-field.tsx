@@ -1,6 +1,14 @@
 import React, { useState } from "react";
+
+import {BoardField} from '../type'
 let changeId = 8;
-const CreateField = ({ boardId, createField, fields }) => {
+
+type Props={
+	boardId:number,
+	createField:(boardId:number, field:BoardField)=>void,
+	fields:BoardField[]
+}
+const CreateField:React.FC<Props> = ({ boardId, createField, fields }) => {
 	const [value, setValue] = useState("");
 	return (
 		<div className="createField">

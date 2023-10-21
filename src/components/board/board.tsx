@@ -1,6 +1,24 @@
 import React, { useState } from "react";
 import CreateField from "../create-field";
-const Board = ({ board, removeBoard, settingField, dragEvent }) => {
+import {BoardField,BoardType,DragParams}from '../type'
+
+type Props={
+	board:BoardType,
+	removeBoard:(id:number)=>void,
+	settingField:{
+		createField:(boardId:number, field:BoardField)=>void,
+		removeField:(boardId:number, fieldId:number)=>void,
+	},
+	dragEvent:{
+		onDragStart:(obj:DragParams)=>void,
+		onDragOver:(obj:DragParams)=>void,
+		onDragLeave:(obj:DragParams)=>void,
+		onDrop:(obj:DragParams)=>void,
+		onDragEnd:(obj:DragParams)=>void,
+	}
+	
+}
+const Board:React.FC<Props> = ({ board, removeBoard, settingField, dragEvent }) => {
 	const { id, fields } = board;
 	return (
 		<div className="board" draggable={true}>

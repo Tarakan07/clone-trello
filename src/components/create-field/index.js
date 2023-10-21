@@ -1,2 +1,2 @@
-import CreateField from "./create-field";
+import CreateField from "./create-field.tsx";
 export default CreateField;
